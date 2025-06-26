@@ -13,6 +13,14 @@ class AuthEndPoints{
   final String getSubCategories = 'categories/subcategories';
   final String getSubSubCategories = 'categories/subsubcategories';
 
+
+
+  final String gettSubCategories = 'products';
+  final String PostCreateData = 'products';
+  final String getProductId = 'products/product/';
+  // final String getSubSubCategories = 'products/subsubcategories';
+  // final String getSubSubCategories = 'products/subsubcategories';
+
   final String withSubcategories = '/with-subcategories';
   final String getSubSubCategory = '/subsubcategory/';
 }

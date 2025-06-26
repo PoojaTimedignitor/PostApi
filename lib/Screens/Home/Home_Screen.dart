@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:post_api_assignment/Screens/Home/Create_Post.dart';
+// import 'package:post_api_assignment/Screens/Home/allCategoryView.dart';
 //
 // class HomeScreen extends StatefulWidget {
 //   const HomeScreen({super.key});
@@ -71,8 +71,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:post_api_assignment/Screens/Home/Category_detail_Page.dart';
-import 'package:post_api_assignment/Screens/Home/Create_Post.dart';
+import 'package:post_api_assignment/Screens/Home/Category_AllProduct_Page.dart';
+import 'package:post_api_assignment/Screens/Home/allCategoryView.dart';
 import 'package:post_api_assignment/Screens/Home/theme_notifier.dart';
 import 'package:post_api_assignment/Services/ApiService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,7 +91,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   ProfileAssignModel? profileData;
-  List<String> categoryNames = [];
+ // List<String> categoryNames = [];
+  List<Map<String, dynamic>> categories = [];
   bool isLoading = true;
 
 
@@ -113,10 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
+  // Future<void> fetchCategory()async{
+  //   final names = await ApiService().getMainCategory();
+  //   setState(() {
+  //     categoryNames = names;
+  //     isLoading = false;
+  //   });
+  // }
+
+
   Future<void> fetchCategory()async{
     final names = await ApiService().getMainCategory();
     setState(() {
-      categoryNames = names;
+      categories = names;
       isLoading = false;
     });
   }
@@ -146,10 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
         'title': 'View All Product',
         'color': Colors.deepPurple,
         'onTap': () {
-          // For example, navigate to another page
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (context) => ViewAllProduct()),
-          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CategoryAllProductPage()),
+          );
         },
       },
     ];
@@ -247,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Logout'),
               onTap: () async {
                 await AuthStorage.clearStorage();
+                print('objecttttttttttt : ${AuthStorage.clearStorage()}');
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const LoginScreen()),
                 );
@@ -267,42 +277,99 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Image.network('https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20%281%20of%201%29-5.jpg?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') ,
             ),
 
+            // Container(
+            //   height: 150,
+            //   decoration: const BoxDecoration(
+            //    // color: Colors.black26
+            //   ),
+            //   child: ListView.builder(
+            //     itemCount: categoryNames.length,
+            //       scrollDirection: Axis.horizontal,
+            //       itemBuilder: (context, index){
+            //       return Padding(
+            //         padding: const EdgeInsets.all(4.0),
+            //         child: InkWell(
+            //           onTap: (){
+            //             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CategoryAllProductPage()));
+            //           },
+            //           child: Container(
+            //             decoration:  BoxDecoration(
+            //               borderRadius: BorderRadius.circular(15),
+            //               color: Colors.blueGrey
+            //             ),
+            //             child: Column(
+            //               children: [
+            //                 Image.asset('assets/arts_service.png', scale: 50,),
+            //                 Text(
+            //                   categoryNames[index],
+            //                   textAlign: TextAlign.center,
+            //                   style: const TextStyle(fontSize: 16, color: Colors.black),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       );
+            //
+            //       }),
+            // ),
+
+
             Container(
-              height: 150,
-              decoration: const BoxDecoration(
-               // color: Colors.black26
-              ),
+              height: 160,
               child: ListView.builder(
-                itemCount: categoryNames.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index){
+                itemCount: categories.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CategoryDetailPage()));
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CategoryAllProductPage(),
+                          ),
+                        );
                       },
                       child: Container(
-                        decoration:  BoxDecoration(
+                        width: 120,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Colors.blueGrey
+                          color: Colors.blueGrey.shade100,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              spreadRadius: 1,
+                              offset: Offset(2, 3),
+                            ),
+                          ],
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('assets/arts_service.png', scale: 50,),
+                            Image.asset('assets/arts_service.png', scale: 2),
+                            const SizedBox(height: 8),
                             Text(
-                              categoryNames[index],
+                              categories[index]['name'] ?? '',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 16, color: Colors.black),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
                   );
-
-                  }),
+                },
+              ),
             ),
+
+
 
             Padding(
               padding: const EdgeInsets.all(16),
